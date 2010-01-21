@@ -1,0 +1,40 @@
+sfTrafficCMSPlugin
+==========================
+
+This is a CMS framework package
+Experimental - use at your own risk!
+
+
+Installation
+------------
+
+To install the plugin for a symfony project, the usual process is to use the
+symfony command line:
+
+    php symfony plugin:install sfTrafficCMSPlugin
+
+If the installation of either package fails then you can manually download the
+tgz file from
+
+    http://plugins.symfony-project.org/get/sfTrafficCMSPlugin/sfTrafficCMSPlugin-1.0.0.tgz
+
+and then ask symfony to install the downloaded file
+
+    php symfony plugin:install sfTrafficCMSPlugin-1.0.0.tgz
+
+Enable the plugin if necessary by editing config/ProjectConfiguration.class.php:
+
+    $this->enablePlugins('sfTrafficCMSPlugin');
+
+
+Usage
+-----
+
+This is an experimental CMS framework package and there's no documentation yet!
+
+As it matures we promise add some documentation. Watch this space...
+
+
+Settings
+--------
+

@@ -1,0 +1,3 @@
+sfTrafficCMSPluginDeleteChildren:
+  url:   /sf_traffic_cms_plugin/delete_children/:model/:id/:parent_model/:parent_model_id
+  param: { module: sfTrafficCMSPlugin, action: deleteChildren }
