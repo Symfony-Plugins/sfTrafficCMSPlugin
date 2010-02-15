@@ -17,4 +17,11 @@ class sfTrafficCMSPluginActions extends sfActions
 
     $this->redirect($request->getReferer());
   }
+
+  public function executeSimplePage(sfWebRequest $request)
+  {
+    $this->page = $this->getRoute()->getObject();
+
+    $this->forward404Unless($this->page);
+  }
 }

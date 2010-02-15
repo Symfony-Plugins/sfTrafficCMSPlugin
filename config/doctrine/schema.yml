@@ -1,0 +1,12 @@
+sfTrafficCMSPage:
+  actAs:
+    Sluggable:
+      fields: [ title ]
+    TrafficCMS: ~
+    Timestampable: ~
+  columns:
+    title:            { type: string(250), notnull: true }
+    route:            { type: string(250) }
+    meta_keywords:    { type: string(250) }
+    meta_description: { type: string(250) }
+    body_copy:        { type: string(10000) }
