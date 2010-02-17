@@ -25,31 +25,100 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       if (isset($model_config['embed']))
       {
         $this->removeEmptyEmbeddedFormFields($taintedValues, $taintedFiles, $model_config['embed']);
+        $this->deleteEmbeddedFormFields($taintedValues, $taintedFiles, $model_config['embed']);
       }
     }
-
+    
     // call parent bind method
     parent::bind($taintedValues, $taintedFiles);
 
   }
 
-  private function removeEmptyEmbeddedFormFields(&$taintedValues, &$taintedFiles, $embedded_models)
+  private function deleteEmbeddedFormFields(&$taintedValues, &$taintedFiles, $embedded_models)
   {
-    foreach ($embedded_models as $model_name_to_embed => $options) {
-      if (!isset($options['file_field']))
+    foreach ($embedded_models as $model_name_to_embed => $options)
+    {
+      if (empty($taintedValues['embedded_' . $model_name_to_embed]))
       {
         continue;
       }
 
+      foreach ($taintedValues['embedded_' . $model_name_to_embed] as $form_name => $values)
+      {
+        if (isset($values['_delete_embedded']))
+        {
+          unset($taintedValues['embedded_' . $model_name_to_embed][$form_name]);
+          if (empty($taintedValues['embedded_' . $model_name_to_embed]))
+          {
+            unset($taintedValues['embedded_' . $model_name_to_embed]);
+          }
+          continue;
+          
+          $form = $this->embeddedForms['embedded_' . $model_name_to_embed];
+          unset($form->embeddedForms[$form_name]);
+          $form->validatorSchema[$form_name] = new sfValidatorPass();
+
+          unset($taintedValues['embedded_' . $model_name_to_embed][$form_name]['_delete_embedded']);
+
+          $class = preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name_to_embed);
+
+          if ($object = Doctrine::getTable($class)->find($values['id']))
+          {
+            $object->delete();
+          }
+        }
+      }
+    }
+  }
+
+  private function removeEmptyEmbeddedFormFields(&$taintedValues, &$taintedFiles, $embedded_models)
+  {
+    foreach ($embedded_models as $model_name_to_embed => $options) {
+      if (!isset($options['ignore_if_empty']))
+      {
+        if (isset($options['file_field']))
+        {
+          $options['ignore_if_empty'] = $options['file_field'];
+        }
+        else
+        {
+          continue;
+        }
+      }
+
       $model_class_name = preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name_to_embed);
 
-      // remove the embedded new form if the name field was not provided
-      if (empty($taintedFiles['new_' . $model_name_to_embed][$options['file_field']]['tmp_name'])) {
+      if (isset($options['file_field']))
+      {
+        // remove the embedded new form if the name field was not provided
+        if (empty($taintedFiles['new_' . $model_name_to_embed][$options['file_field']]['tmp_name'])) {
 
-        unset($this->embeddedForms['new_' . $model_name_to_embed]);
+          unset($this->embeddedForms['new_' . $model_name_to_embed]);
 
-        // pass the new form validations
-        $this->validatorSchema['new_' . $model_name_to_embed] = new sfValidatorPass();
+          // pass the form validations
+          $this->validatorSchema['new_' . $model_name_to_embed] = new sfValidatorPass();
+
+          unset($taintedValues['new_' . $model_name_to_embed]);
+        }
+      }
+      else
+      {
+        $fields = is_array($options['ignore_if_empty'])
+          ? $options['ignore_if_empty']
+          : array($options['ignore_if_empty']);
+
+        foreach ($fields as $field)
+        {
+          if (empty($taintedValues['new_' . $model_name_to_embed][$field]))
+          {
+            unset($this->embeddedForms['new_' . $model_name_to_embed]);
+
+            // pass the form validations
+            $this->validatorSchema['new_' . $model_name_to_embed] = new sfValidatorPass();
+
+            break;
+          }
+        }
       }
     }
   }
@@ -97,6 +166,13 @@ class TrafficCMSBaseForm extends sfFormDoctrine
           $this->configureField($field_name, $config_options);
         }
       }
+    }
+
+    if ($this->getOption('embedded', false))
+    {
+      $this->widgetSchema['_delete_embedded'] = new sfWidgetFormChoice(
+        array('choices' => array('remove' => ''), 'expanded' => true, 'multiple' => true, 'label' => 'Remove')
+      );
     }
   }
 
@@ -222,29 +298,41 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
   private function embedModel($model_name, $options)
   {
+    $options['max_records'] = isset($options['max_records']) ? $options['max_records'] : 1000000;
+    
     $object = $this->getObject();
 
     $embedded_form_name = 'embedded_' . $model_name;
-    $form_to_embed = new sfForm(null, array('id' => 'Sortable' . $model_name));
-    $widgets = array();
+    $form_to_embed = new sfForm(null, array('id' => 'Embedded' . $model_name));
+    //$widgets = array();
     $object_count = 0;
 
-    $model_class = preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name);
-    //foreach ($object->{$model_name . 's'} as $object_to_embed)
+    $model_class = isset($options['foreignAlias'])
+      ? $options['foreignAlias']
+      : preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name);
 
-    foreach ($object->get($model_class . 's') as $object_to_embed)
-    {
+    $children = $object->get($model_class . 's');
 
+    foreach ($children as $key => $object_to_embed)
+    { 
       $object_count++;
 
       $widget_name = $model_name . '_' . $object_to_embed->getId();
+
+      if (isset($_POST[$object->getTable()->getTableName()][$embedded_form_name][$widget_name]['_delete_embedded']))
+      {
+        $object_to_embed->delete();
+        unset($children[$key]);
+        continue;
+      }
+
       $form_class = get_class($object_to_embed) . 'Form';
 
       $widget_form = new $form_class($object_to_embed, array(
         'embedded' => true,
         'parent_model' =>  $object,
       ));
-
+      
       // Hide the parent id since we don't want to be able to edit it
       $widget_form->setWidget($object->getTable()->getTableName() . '_id', new sfWidgetFormInputHidden());
 
@@ -257,20 +345,21 @@ class TrafficCMSBaseForm extends sfFormDoctrine
         )
       );
 
-      $widgets[] = $form_to_embed->getWidget($widget_name);
-
     }
+    $object->set($model_class . 's', $children);
+//    if ($object_count > 0)
+//    {
+      $this->embedForm($embedded_form_name, $form_to_embed);
 
-    $this->embedForm($embedded_form_name, $form_to_embed);
-
-    $this->setWidgetSchema(
-      $this->getWidgetSchema()->setLabel(
-        $embedded_form_name,
-        isset($options['form_label'])
-          ? $options['form_label']
-          : ucfirst(str_replace('_', ' ', $model_name))
-      )
-    );
+      $this->setWidgetSchema(
+        $this->getWidgetSchema()->setLabel(
+          $embedded_form_name,
+          isset($options['form_label'])
+            ? $options['form_label']
+            : ucfirst(str_replace('_', ' ', $model_name))
+        )
+      );
+//    }
 
     if (!$object->isNew() && $object_count < $options['max_records']) {
       $model_class = preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name);
