@@ -2,6 +2,8 @@ all:
   sf_traffic_cms_plugin:
     auto_configure:
       date_format: %day%/%month%/%year%
+      date_picker:
+        years:  [<?php echo implode(',', range(2000, date("Y") + 5)); ?>]
       tiny_mce:
         width: 550
         height: 350
