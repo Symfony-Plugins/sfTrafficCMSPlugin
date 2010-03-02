@@ -325,8 +325,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
       if (isset($_POST[$object->getTable()->getTableName()][$embedded_form_name][$widget_name]['_delete_embedded']))
       {
-        $object_to_embed->delete();
-        unset($children[$key]);
+        $children->remove($key);
         continue;
       }
 
@@ -350,7 +349,8 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       );
 
     }
-    $object->set($model_class . 's', $children);
+    $children->save();
+//    $object->set($model_class . 's', $children);
 //    if ($object_count > 0)
 //    {
       $this->embedForm($embedded_form_name, $form_to_embed);
