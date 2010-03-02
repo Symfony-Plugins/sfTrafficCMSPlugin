@@ -48,9 +48,11 @@ class TrafficCMSBaseForm extends sfFormDoctrine
         if (isset($values['_delete_embedded']))
         {
           unset($taintedValues['embedded_' . $model_name_to_embed][$form_name]);
+          unset($taintedFiles['embedded_' . $model_name_to_embed][$form_name]);
           if (empty($taintedValues['embedded_' . $model_name_to_embed]))
           {
             unset($taintedValues['embedded_' . $model_name_to_embed]);
+            unset($taintedFiles['embedded_' . $model_name_to_embed]);
           }
           continue;
           
