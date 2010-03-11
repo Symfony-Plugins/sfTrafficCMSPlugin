@@ -2,6 +2,21 @@
 
 class sfTrafficCMSPluginActions extends sfActions
 {
+  public function executeHome(sfWebRequest $request)
+  {
+
+    $config = sfContext::getInstance()->getConfiguration()->getPluginConfiguration('sfDoctrinePlugin')->getCliConfig();
+
+    Doctrine_Core::loadModels($config['models_path']);
+    $this->models = Doctrine_Core::getLoadedModels();
+
+    /**
+     * Loop through the models and display links to any existing routes for them
+     */
+
+    //foreach
+  }
+  
   public function executeDeleteChildren(sfWebRequest $request)
   {
     $child = Doctrine::getTable($request->getParameter('model'))

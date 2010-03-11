@@ -127,12 +127,12 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
   private function autoConfigure()
   {
-    $config = sfConfig::get('app_sf_traffic_cms_plugin_auto_configure');
+    $config = sfConfig::get('app_sf_traffic_cms_plugin_auto_configure', array());
     $object = $this->getObject();
 
-    if (empty($config['models'])
-        || (!array_key_exists('all', $config['models'])
-          && !array_key_exists($object->getTable()->getTableName(), $config['models'])))
+    if (isset($config['models']['all'])
+          && $config['models']['all'] == false
+          && !array_key_exists($object->getTable()->getTableName(), $config['models']))
     {
       return false;
     }
@@ -215,9 +215,9 @@ class TrafficCMSBaseForm extends sfFormDoctrine
         sfJSLibManager::addLib('tiny_mce');
 
         $this->setWidget($name, new sfWidgetFormTextareaTinyMCE(array(
-          'width' => $config['tiny_mce']['width'],
-          'height' => $config['tiny_mce']['height'],
-          'config' => $config['tiny_mce']['config'],
+          'width' => isset($config['tiny_mce']['width']) ? $config['tiny_mce']['width'] : 550,
+          'height' => isset($config['tiny_mce']['height']) ? $config['tiny_mce']['height'] : 350,
+          'config' => isset($config['tiny_mce']['config']) ? $config['tiny_mce']['config'] : 'theme: "simple"',
         )));
       }
       else if ($widget instanceof sfWidgetFormDate)
