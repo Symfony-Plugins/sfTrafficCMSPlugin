@@ -8,7 +8,8 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
   public function setup()
   {
-    if ($this->getObject()->getTable()->hasTemplate('Doctrine_Template_TrafficCMS'))
+    if ((!isset($this->autoConfigure) || $this->autoConfigure == true)
+        && $this->getObject()->getTable()->hasTemplate('Doctrine_Template_TrafficCMS'))
     {
       $this->autoConfigure();
     }
