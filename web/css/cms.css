@@ -1,0 +1,9 @@
+#cms_menu ul li {
+  display: inline;
+  list-style-type: none;
+  margin-right: 10px
+}
+
+#cms_menu ul li a {
+  text-decoration: none;
+}
