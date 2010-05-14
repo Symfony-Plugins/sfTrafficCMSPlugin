@@ -225,14 +225,18 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       {
         sfJSLibManager::addLib('jquery_ui');
 
-		$appConfig = sfConfig::get('app_sf_traffic_cms_plugin_auto_configure');
-		$dateYear = array_combine($appConfig['date_picker']['years'], $appConfig['date_picker']['years']);
+        $appConfig = sfConfig::get('app_sf_traffic_cms_plugin_auto_configure');
+        $dateYear = array_combine($appConfig['date_picker']['years'], $appConfig['date_picker']['years']);
 
-        $this->setWidget($name, new sfWidgetFormJQueryDate(array(
+        $dateWidget = $this->getWidget($name);
+        $dateWidget->setOptions(array(
             'format' => sfConfig::get($appConfig['date_format'], $config['date_format']),
             'can_be_empty' => $widget->getOption('can_be_empty'),
-			'years' => $dateYear
-        )));
+            'years' => $dateYear,
+            'months' => array_combine(range(1, 12), range(1, 12)),
+            'days' => array_combine(range(1, 31), range(1, 31)),
+          ));
+        $this->setWidget($name, new sfWidgetFormJQueryDate(array('date_widget' => $dateWidget)));
       }
     }
   }
@@ -341,7 +345,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       
       // Hide the parent id since we don't want to be able to edit it
       $widget_form->setWidget($object->getTable()->getTableName() . '_id', new sfWidgetFormInputHidden());
-
+      
       $form_to_embed->embedForm($widget_name, $widget_form);
 
       $form_to_embed->setWidgetSchema(
@@ -352,6 +356,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       );
 
     }
+    
     $children->save();
 //    $object->set($model_class . 's', $children);
 //    if ($object_count > 0)
@@ -396,5 +401,6 @@ class TrafficCMSBaseForm extends sfFormDoctrine
         )
       );
     }
+    
   }
 }
