@@ -39,4 +39,13 @@ class sfTrafficCMSPluginActions extends sfActions
 
     $this->forward404Unless($this->page);
   }
+
+  public function executeShowSubPage(sfWebRequest $request)
+  {
+    $this->subPage = sfTrafficCMSSubPageTable::getInstance()->createQuery('p')
+            ->where('slug=?', $request->getParameter('slug'))
+            ->fetchOne();
+
+    $this->forward404Unless($this->subPage);
+  }
 }

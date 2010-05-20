@@ -10,3 +10,22 @@ sfTrafficCMSPage:
     meta_keywords:    { type: string(250) }
     meta_description: { type: string(250) }
     body_copy:        { type: string(10000) }
+
+sfTrafficCMSSubPage:
+  actAs:
+    Sluggable:
+      fields: [ title ]
+    TrafficCMS: ~
+    Timestampable: ~
+  columns:
+    title:            { type: string(250), notnull: true }
+    parent_id:        { type: integer, notnull: false }
+    route:            { type: string(250) }
+    meta_keywords:    { type: string(250) }
+    meta_description: { type: string(250) }
+    body_copy:        { type: string(10000) }
+  relations:
+    Parent:
+      class: sfTrafficCMSPage
+      local: parent_id
+      foreignAlias: SubPages
