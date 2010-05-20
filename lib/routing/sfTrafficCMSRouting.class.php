@@ -34,5 +34,15 @@ class sfTrafficCMSRouting
         array(), // requirements
         array('model' => 'sfTrafficCMSPage', 'type' => 'object')  // options
     ));
+
+    $r->appendRoute('simple_sub_page',
+      new sfRequestRoute(
+        '/:parentslug/:slug',
+        array('module' => 'sfTrafficCMSPlugin', 'action' => 'showSubPage') // defaults
+    ));
   }
 }
+
+#simple_sub_page:
+#  url:  /:parentslug/:slug
+#  params: { module: sfTrafficCMSPlugin, action: showSubPage }
