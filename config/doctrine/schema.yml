@@ -10,6 +10,7 @@ sfTrafficCMSPage:
     meta_keywords:    { type: string(250) }
     meta_description: { type: string(250) }
     body_copy:        { type: string(10000) }
+    has_sub_pages:    { type: boolean, notnull: true, default: false }
 
 sfTrafficCMSSubPage:
   actAs:
