@@ -150,7 +150,24 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       {
         foreach ($model_config['embed'] as $model_name => $options)
         {
-          $this->embedModel($model_name, $options);
+          $skip = false;
+
+          if (isset($options['conditions']))
+          {
+            foreach ($options['conditions'] as $field => $value)
+            {
+              if ($object->$field != $value)
+              {
+                $skip = true;
+                break;
+              }
+            }
+          }
+
+          if (!$skip)
+          {
+            $this->embedModel($model_name, $options);
+          }
         }
       }
 
@@ -314,7 +331,10 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     $object = $this->getObject();
 
     $embedded_form_name = 'embedded_' . $model_name;
+    $new_form_name = 'new_' . $model_name;
     $form_to_embed = new sfForm(null, array('id' => 'Embedded' . $model_name));
+
+    $local = isset($options['local']) ? $options['local'] : $object->getTable()->getTableName() . '_id';
     //$widgets = array();
     $object_count = 0;
 
@@ -346,7 +366,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       ));
       
       // Hide the parent id since we don't want to be able to edit it
-      $widget_form->setWidget($object->getTable()->getTableName() . '_id', new sfWidgetFormInputHidden());
+      $widget_form->setWidget($local, new sfWidgetFormInputHidden());
       
       $form_to_embed->embedForm($widget_name, $widget_form);
 
@@ -376,7 +396,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       // create a new embedded field object
       $object_to_embed = new $model_class();
 
-      $object_to_embed->{$object->getTable()->getTableName() . '_id'} = $object->getId();
+      $object_to_embed->$local = $object->getId();
 
       $form_class = get_class($object_to_embed) . 'Form';
 
@@ -384,14 +404,14 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       $form_to_embed = new $form_class($object_to_embed);
 
       // Hide the parent id since we don't want to be able to edit it
-      $form_to_embed->setWidget($object->getTable()->getTableName() . '_id', new sfWidgetFormInputHidden());
+      $form_to_embed->setWidget($local, new sfWidgetFormInputHidden());
 
       // embed the form in the current form
-      $this->embedForm('new_' . $model_name, $form_to_embed);
+      $this->embedForm($new_form_name, $form_to_embed);
 
       $this->setWidgetSchema(
         $this->getWidgetSchema()->setLabel(
-          'new_' . $model_name,
+          $new_form_name,
           isset($options['add_new_label'])
             ? $options['add_new_label']
             : 'Add new ' . str_replace('_', ' ', $model_name)
