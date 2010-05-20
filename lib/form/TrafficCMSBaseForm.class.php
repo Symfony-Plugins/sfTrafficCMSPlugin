@@ -323,7 +323,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       : preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name);
 
     $children = $object->get($model_class . 's');
-
+    $children->loadRelated();
     foreach ($children as $key => $object_to_embed)
     { 
       $object_count++;
@@ -335,6 +335,8 @@ class TrafficCMSBaseForm extends sfFormDoctrine
         $children->remove($key);
         continue;
       }
+
+      $children[$key]->refreshRelated();
 
       $form_class = get_class($object_to_embed) . 'Form';
 
@@ -356,22 +358,17 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       );
 
     }
-    
-    $children->save();
-//    $object->set($model_class . 's', $children);
-//    if ($object_count > 0)
-//    {
-      $this->embedForm($embedded_form_name, $form_to_embed);
 
-      $this->setWidgetSchema(
-        $this->getWidgetSchema()->setLabel(
-          $embedded_form_name,
-          isset($options['form_label'])
-            ? $options['form_label']
-            : ucfirst(str_replace('_', ' ', $model_name))
-        )
-      );
-//    }
+    $this->embedForm($embedded_form_name, $form_to_embed);
+
+    $this->setWidgetSchema(
+      $this->getWidgetSchema()->setLabel(
+        $embedded_form_name,
+        isset($options['form_label'])
+          ? $options['form_label']
+          : ucfirst(str_replace('_', ' ', $model_name))
+      )
+    );
 
     if (!$object->isNew() && $object_count < $options['max_records']) {
       $model_class = preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name);
