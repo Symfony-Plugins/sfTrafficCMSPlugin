@@ -57,18 +57,19 @@ class TrafficCMSBaseForm extends sfFormDoctrine
           }
           continue;
           
-          $form = $this->embeddedForms['embedded_' . $model_name_to_embed];
-          unset($form->embeddedForms[$form_name]);
-          $form->validatorSchema[$form_name] = new sfValidatorPass();
-
-          unset($taintedValues['embedded_' . $model_name_to_embed][$form_name]['_delete_embedded']);
-
-          $class = preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name_to_embed);
-
-          if ($object = Doctrine::getTable($class)->find($values['id']))
-          {
-            $object->delete();
-          }
+//          $form = $this->embeddedForms['embedded_' . $model_name_to_embed];
+//          unset($form->embeddedForms[$form_name]);
+//          unset($this[$form_name]);
+//          $form->validatorSchema[$form_name] = new sfValidatorPass();
+//
+//          unset($taintedValues['embedded_' . $model_name_to_embed][$form_name]['_delete_embedded']);
+//
+//          $class = preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name_to_embed);
+//
+//          if ($object = Doctrine::getTable($class)->find($values['id']))
+//          {
+//            $object->delete();
+//          }
         }
       }
     }
@@ -344,13 +345,22 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
     $children = $object->get($model_class . 's');
     $children->loadRelated();
+    
     foreach ($children as $key => $object_to_embed)
     { 
       $object_count++;
 
       $widget_name = $model_name . '_' . $object_to_embed->getId();
-
-      if (isset($_POST[$object->getTable()->getTableName()][$embedded_form_name][$widget_name]['_delete_embedded']))
+//if (!empty($_POST)) {
+//  var_dump($object->getTable()->getTableName());
+//  var_dump($this->getName());
+//  var_dump($embedded_form_name);
+//  var_dump($widget_name);
+//  var_dump($_POST[$this->getName()]['embedded_sf_traffic_c_m_s_sub_page']['sf_traffic_c_m_s_sub_page_5']);
+//  //var_dump($_POST['sf_traffic_c_m_s_sub_page_5']);
+//  exit;
+//  }
+      if (isset($_POST[$this->getName()][$embedded_form_name][$widget_name]['_delete_embedded']))
       {
         $children->remove($key);
         continue;
