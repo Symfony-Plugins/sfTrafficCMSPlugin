@@ -1,4 +1,4 @@
-<?php $subPages = $page->getSubPages() ?>
+<?php $subPages = $page->has_sub_pages ? $page->getSubPages() : array() ?>
 <?php if (count($subPages)): ?>
 <ul id="page-sub-menu">
   <li<? if ($sf_data->getRaw('currentPage') instanceof sfTrafficCMSPage) { echo ' class="selected"'; } ?>><a href="<?php echo url_for('@simple_page?slug=' . $page->slug) ?>"><?php echo $page->title ?></a></li>

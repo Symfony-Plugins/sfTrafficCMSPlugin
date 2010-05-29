@@ -10,4 +10,24 @@
  */
 abstract class PluginsfTrafficCMSSubPageForm extends BasesfTrafficCMSSubPageForm
 {
+  public function configure()
+  {
+    $useFields = array('parent_id', 'title', 'body_copy');
+
+    $extras = array(
+      'embedded_c_m_s_sub_page_image',
+      'new_c_m_s_sub_page_image',
+      '_delete_embedded',
+    );
+
+    foreach ($extras as $field)
+    {
+      if (isset($this->widgetSchema[$field]))
+      {
+        $useFields[] = $field;
+      }
+    }
+
+    $this->useFields($useFields);
+  }
 }
