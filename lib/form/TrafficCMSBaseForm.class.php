@@ -46,6 +46,12 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
       foreach ($taintedValues['embedded_' . $model_name_to_embed] as $form_name => $values)
       {
+        // To do: figure out how to remove embedded embedded stuff
+//        print("<pre>");
+//        print_r($values);
+//        print("fuck");
+//        print_r($taintedValues);
+//        die("y'bastard");
         if (isset($values['_delete_embedded']))
         {
           unset($taintedValues['embedded_' . $model_name_to_embed][$form_name]);
@@ -342,7 +348,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     $model_class = isset($options['foreignAlias'])
       ? $options['foreignAlias']
       : preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name);
-
+//die($model_class . 's');
     $children = $object->get($model_class . 's');
     $children->loadRelated();
     
@@ -356,16 +362,21 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 //  var_dump($this->getName());
 //  var_dump($embedded_form_name);
 //  var_dump($widget_name);
-//  var_dump($_POST[$this->getName()]['embedded_sf_traffic_c_m_s_sub_page']['sf_traffic_c_m_s_sub_page_5']);
+//  var_dump($_POST[$this->getName()]['embedded_music_collection_item']['music_collection_item_5']);
 //  //var_dump($_POST['sf_traffic_c_m_s_sub_page_5']);
-//  exit;
+////  exit;
 //  }
       if (isset($_POST[$this->getName()][$embedded_form_name][$widget_name]['_delete_embedded']))
       {
+//        die("yeah $key");
+//        print("removed $key<br/>");
         $children->remove($key);
+//        $c = new Doctrine_Collection('MusicCollectionItem');
+//        $c->
+        $children->save();
         continue;
       }
-
+//die("woo");
       $children[$key]->refreshRelated();
 
       $form_class = get_class($object_to_embed) . 'Form';
@@ -429,5 +440,20 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       );
     }
     
+  }
+
+  public function useAvailableFields(array $fields)
+  {
+    $finalFields = array();
+
+    foreach ($fields as $field)
+    {
+      if (isset($this->widgetSchema[$field]))
+      {
+        $finalFields[] = $field;
+      }
+    }
+
+    $this->useFields($finalFields);
   }
 }
