@@ -46,12 +46,6 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
       foreach ($taintedValues['embedded_' . $model_name_to_embed] as $form_name => $values)
       {
-        // To do: figure out how to remove embedded embedded stuff
-//        print("<pre>");
-//        print_r($values);
-//        print("fuck");
-//        print_r($taintedValues);
-//        die("y'bastard");
         if (isset($values['_delete_embedded']))
         {
           unset($taintedValues['embedded_' . $model_name_to_embed][$form_name]);
@@ -62,20 +56,6 @@ class TrafficCMSBaseForm extends sfFormDoctrine
             unset($taintedFiles['embedded_' . $model_name_to_embed]);
           }
           continue;
-          
-//          $form = $this->embeddedForms['embedded_' . $model_name_to_embed];
-//          unset($form->embeddedForms[$form_name]);
-//          unset($this[$form_name]);
-//          $form->validatorSchema[$form_name] = new sfValidatorPass();
-//
-//          unset($taintedValues['embedded_' . $model_name_to_embed][$form_name]['_delete_embedded']);
-//
-//          $class = preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name_to_embed);
-//
-//          if ($object = Doctrine::getTable($class)->find($values['id']))
-//          {
-//            $object->delete();
-//          }
         }
       }
     }
@@ -349,7 +329,10 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       ? $options['foreignAlias']
       : preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name);
 //die($model_class . 's');
-    $children = $object->get($model_class . 's');
+    $children = isset($options['table_method'])
+      ? $object->getTable()->{$options['table_method']}($object)
+      : $object->get($model_class . 's');
+      
     $children->loadRelated();
     
     foreach ($children as $key => $object_to_embed)
