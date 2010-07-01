@@ -33,8 +33,11 @@ class TrafficCMSBaseFilter extends sfFormFilterDoctrine
     {
       if ($widget instanceof sfWidgetFormFilterDate)
       {
-        $this->getWidget($name)->getOption('from_date')->setOption('format', $config['date_format']);
-        $this->getWidget($name)->getOption('to_date')->setOption('format', $config['date_format']);
+        $from = $this->getWidget($name)->getOption('from_date');
+        $to = $this->getWidget($name)->getOption('to_date');
+
+        $widget->setOption('from_date', sfTrafficCMSTools::convertToJQueryUIDatePicker($from, $config));
+        $widget->setOption('to_date', sfTrafficCMSTools::convertToJQueryUIDatePicker($to, $config));
       }
     }
   }

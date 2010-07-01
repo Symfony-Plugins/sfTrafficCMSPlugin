@@ -227,19 +227,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       }
       else if ($widget instanceof sfWidgetFormDate)
       {
-        sfJSLibManager::addLib('jquery_ui');
-
-        $dateYear = array_combine($config['date_picker']['years'], $config['date_picker']['years']);
-
-        $dateWidget = $this->getWidget($name);
-        $dateWidget->setOptions(array(
-            'format' => sfConfig::get($config['date_format'], '%day%/%month%/%year%'),
-            'can_be_empty' => $widget->getOption('can_be_empty'),
-            'years' => $dateYear,
-            'months' => array_combine(range(1, 12), range(1, 12)),
-            'days' => array_combine(range(1, 31), range(1, 31)),
-          ));
-        $this->setWidget($name, new sfWidgetFormJQueryDate(array('date_widget' => $dateWidget)));
+        $this->setWidget($name, sfTrafficCMSTools::convertToJQueryUIDatePicker($widget, $config));
       }
     }
   }
