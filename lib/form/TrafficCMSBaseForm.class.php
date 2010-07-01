@@ -229,12 +229,11 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       {
         sfJSLibManager::addLib('jquery_ui');
 
-        $appConfig = sfConfig::get('app_sf_traffic_cms_plugin_auto_configure');
-        $dateYear = array_combine($appConfig['date_picker']['years'], $appConfig['date_picker']['years']);
+        $dateYear = array_combine($config['date_picker']['years'], $config['date_picker']['years']);
 
         $dateWidget = $this->getWidget($name);
         $dateWidget->setOptions(array(
-            'format' => sfConfig::get($appConfig['date_format'], $config['date_format']),
+            'format' => sfConfig::get($config['date_format'], '%day%/%month%/%year%'),
             'can_be_empty' => $widget->getOption('can_be_empty'),
             'years' => $dateYear,
             'months' => array_combine(range(1, 12), range(1, 12)),
