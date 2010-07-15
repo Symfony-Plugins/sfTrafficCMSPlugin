@@ -74,7 +74,7 @@ class Export {
               $value = $value ? 'Yes' : 'No';
               break;
             case 'timestamp':
-              $value = date('h:m d-m-Y', strtotime($value));
+              $value = date('h:i d-m-Y', strtotime($value));
               break;
             case 'date':
               $value = date('d-m-Y', strtotime($value));
