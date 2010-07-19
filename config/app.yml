@@ -7,4 +7,4 @@ all:
       tiny_mce:
         width: 550
         height: 350
-        config: theme: "simple"
+        config: 'theme: "simple"'
