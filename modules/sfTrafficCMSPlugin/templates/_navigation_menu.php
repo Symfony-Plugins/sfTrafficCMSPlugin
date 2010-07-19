@@ -1,8 +1,8 @@
 <?php if ($sf_user->isAuthenticated()): ?>
-  <div id="cms_menu">
+  <?php $nav_items = isset($nav_items) ? $nav_items : sfConfig::get('app_sf_traffic_cms_plugin_navigation') ?>
+  <?php $config = sfConfig::get('app_sf_traffic_cms_plugin_auto_configure') ?>
+  <div class="cms_menu">
     <ul>
-    <?php $nav_items = sfConfig::get('app_sf_traffic_cms_plugin_navigation') ?>
-    <?php $config = sfConfig::get('app_sf_traffic_cms_plugin_auto_configure') ?>
     <?php foreach ($nav_items as $model => $options): ?>
       <?php $singleton = (isset($config['models'][$model]['singleton']) && $config['models'][$model]['singleton']) ? $config['models'][$model]['singleton'] : false ?>
       <?php if(!isset($options['credential']) || $sf_user->hasCredential($options['credential'])): ?>
@@ -11,7 +11,9 @@
       </li>
       <?php endif ?>
     <?php endforeach ?>
+    <?php if (!isset($no_logout)): ?>
       <li><?php echo link_to('Log out', '@sf_guard_signout') ?></li>
+    <?php endif ?>
     </ul>
   </div>
 <?php endif; ?>
