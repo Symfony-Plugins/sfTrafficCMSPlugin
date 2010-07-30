@@ -82,7 +82,7 @@ class Export {
           }
         }
 
-        $value = str_replace('"', '\"', $value);
+        $value = str_replace('"', '""', $value);
 
         $line[] = is_numeric($value) ? $value : '"' . $value . '"';
       }
