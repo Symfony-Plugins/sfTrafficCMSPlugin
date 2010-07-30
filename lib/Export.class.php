@@ -82,10 +82,12 @@ class Export {
           }
         }
 
-        $line[] = str_replace('"', '\"', $value);
+        $value = str_replace('"', '\"', $value);
+
+        $line[] = is_numeric($value) ? $value : '"' . $value . '"';
       }
 
-      $lines[] = '"' . implode('","', $line) . '"';
+      $lines[] = implode(',', $line);
     }
 
     $lines = array_merge(array('"' . implode('","', $displayFields) . '"'), $lines);
