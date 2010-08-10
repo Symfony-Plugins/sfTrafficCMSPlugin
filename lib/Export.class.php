@@ -34,6 +34,13 @@ class Export {
       $displayFields = array_combine(array_keys($fields), array_keys($fields));
     }
 
+    $totals = array();
+
+    foreach ($displayFields as $field => $label)
+    {
+      $totals[$field] = isset($config['totals']) && array_key_exists($field, $config['totals']) ? 0 : null;
+    }
+    
     $lines = array();
 
     foreach ($objects as $object)
@@ -84,6 +91,11 @@ class Export {
 
         $value = str_replace('"', '""', $value);
 
+        if (!is_null($totals[$field]))
+        {
+          $totals[$field] += $value;
+        }
+
         $line[] = is_numeric($value) ? $value : '"' . $value . '"';
       }
 
@@ -91,6 +103,8 @@ class Export {
     }
 
     $lines = array_merge(array('"' . implode('","', $displayFields) . '"'), $lines);
+
+    $lines[] = implode(',', $totals);
 
     $csv = implode("\n", $lines);
 
