@@ -186,16 +186,33 @@ class TrafficCMSBaseForm extends sfFormDoctrine
   private function configureField($field_name, $config)
   {
     /**
-     * Get the options set for the default widget
+     * Get the options set for the default widget if we didn't specify to clear them
      */
-    $options = $this->getWidget($field_name)->getOptions();
+    $options = isset($config['clear_options']) && $config['clear_options']
+      ? array()
+      : $this->getWidget($field_name)->getOptions();
 
     /**
-     * Merge with any options specified in the config
+     * Apply options specified in the config
      */
     if (!empty($config['options']))
     {
       $options = array_merge($options, $config['options']);
+    }
+
+    /**
+     * Get the attributes set for the default widget if we didn't specify to clear them
+     */
+    $attributes = isset($config['clear_attributes']) && $config['clear_attributes']
+      ? array()
+      : $this->getWidget($field_name)->getAttributes();
+
+    /**
+     * Apply attributes specified in the config
+     */
+    if (!empty($config['attributes']))
+    {
+      $attributes = array_merge($attributes, $config['attributes']);
     }
 
     if (isset($config['class']))
@@ -203,7 +220,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       /**
        * Create the widget specified in the config & overwrite the default with it
        */
-      $this->setWidget($field_name, new $config['class']($options));
+      $this->setWidget($field_name, new $config['class']($options, $attributes));
     }
     else
     {
