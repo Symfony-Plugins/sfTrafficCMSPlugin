@@ -242,6 +242,10 @@ class TrafficCMSBaseForm extends sfFormDoctrine
           'config' => isset($config['tiny_mce']['config']) ? $config['tiny_mce']['config'] : 'theme: "simple"',
         )));
       }
+      else if ($widget instanceof sfWidgetFormInputText)
+      {
+        $this->getWidget($name)->setAttribute('style', 'width: 420px');
+      }
       else if ($widget instanceof sfWidgetFormDate)
       {
         $this->setWidget($name, sfTrafficCMSTools::convertToJQueryUIDatePicker($widget, $config));
