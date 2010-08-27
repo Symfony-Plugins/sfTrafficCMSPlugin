@@ -244,7 +244,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       }
       else if ($widget instanceof sfWidgetFormInputText)
       {
-        $this->getWidget($name)->setAttribute('style', 'width: 420px');
+        $this->getWidget($name)->setAttribute('class', 'textinput');
       }
       else if ($widget instanceof sfWidgetFormDate)
       {
