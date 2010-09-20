@@ -11,6 +11,11 @@ class sfTrafficCMSPluginComponents extends sfComponents
     //$this->checkModelsExist($this->models);
   }
 
+  public function executeSubNav(sfWebRequest $request)
+  {
+    
+  }
+
   protected function checkModelsExist($models)
   {
     $dir = getcwd();
