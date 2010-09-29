@@ -40,6 +40,8 @@ class sfTrafficCMSPluginActions extends sfActions
     $this->forward404Unless($this->page);
 
     $this->getResponse()->setSlot('simple_page-' . $this->page->slug, true);
+
+    $this->getResponse()->setTitle($this->page->title);
   }
 
   public function executeShowSubPage(sfWebRequest $request)
@@ -51,5 +53,7 @@ class sfTrafficCMSPluginActions extends sfActions
     $this->forward404Unless($this->subPage);
 
     $this->getResponse()->setSlot('simple_sub_page-' . $this->subPage->slug, true);
+
+    $this->getResponse()->setTitle($this->subPage->Parent->title . ' - ' . $this->subPage->title);
   }
 }
