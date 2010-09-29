@@ -41,4 +41,17 @@ class TrafficCMSBaseFilter extends sfFormFilterDoctrine
       }
     }
   }
+
+ public function processValues($values)
+  {
+
+    if (self::$dispatcher)
+    {
+      //FormListener::listenToFormPostConfigure($this);
+      self::$dispatcher->notify(new sfEvent($this, 'filter.build_query'));
+    }
+    return parent::processValues($values);
+  }
+
+
 }

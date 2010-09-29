@@ -13,7 +13,7 @@
         <?php echo link_to($options['label'], '@' . $model . ($singleton ? '_edit?id=1' : '')); ?>
       <?php else: ?>
       <li>
-        <a href="#"><?php echo $options['label'];?></a>
+        <a class="no-href"><?php echo $options['label'];?></a>
       <?php endif; ?>
         <?php
         if(isset($options['sub_menu'])):

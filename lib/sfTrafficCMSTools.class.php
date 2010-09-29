@@ -15,4 +15,20 @@ class sfTrafficCMSTools {
 
     return new sfWidgetFormJQueryDate(array('date_widget' => $widget));
   }
+
+  public static function appendSeoContent(sfEvent $event )
+  {
+    $response = sfContext::getInstance()->getResponse();
+    $route = sfContext::getInstance()->getRouting()->getCurrentRouteName();
+    
+    
+    $pageSEOContent =  sfTrafficCMSSeoTable::getInstance()->findOneByRoute($route);
+    
+    if($pageSEOContent instanceof sfTrafficCMSSeo)
+    {
+      $response->setTitle($pageSEOContent->title);
+      $response->addHttpMeta('description', $pageSEOContent->meta_description);
+      $response->addHttpMeta('keywords', $pageSEOContent->meta_keywords);
+    }
+  }
 }

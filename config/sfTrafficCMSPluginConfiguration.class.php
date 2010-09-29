@@ -11,5 +11,12 @@ class sfTrafficCMSPluginConfiguration extends sfPluginConfiguration
     $this->dispatcher->connect('routing.load_configuration', array(
         'sfTrafficCMSRouting', 'simplePageRouting',
       ));
+
+    if(class_exists('sfTrafficCMSSeoTable')){
+      
+      $this->dispatcher->connect('controller.change_action', array(
+          'sfTrafficCMSTools', 'appendSeoContent',
+        ));
+    }
   }
 }

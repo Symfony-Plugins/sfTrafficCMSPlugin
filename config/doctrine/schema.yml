@@ -30,3 +30,16 @@ sfTrafficCMSSubPage:
       class: sfTrafficCMSPage
       local: parent_id
       foreignAlias: SubPages
+
+
+sfTrafficCMSSeo:
+  actAs:
+    Timestampable: ~
+    TrafficCMS: ~
+  columns:
+    page_name:        { type: string(250) }
+    title:            { type: string(250) }
+    url:              { type: string(100) }
+    route:            { type: string(250) }
+    meta_keywords:    { type: string(250) }
+    meta_description: { type: string(250) }

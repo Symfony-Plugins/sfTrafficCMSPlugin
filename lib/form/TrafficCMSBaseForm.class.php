@@ -64,7 +64,11 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
   private function removeEmptyEmbeddedFormFields(&$taintedValues, &$taintedFiles, $embedded_models)
   {
+    
     foreach ($embedded_models as $model_name_to_embed => $options) {
+      
+      
+
       if (!isset($options['ignore_if_empty']))
       {
         if (isset($options['file_field']))
@@ -76,7 +80,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
           continue;
         }
       }
-
+      
       $model_class_name = preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name_to_embed);
 
       if (isset($options['file_field']))
@@ -112,6 +116,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
         }
       }
     }
+    
   }
 
   private function autoConfigure()

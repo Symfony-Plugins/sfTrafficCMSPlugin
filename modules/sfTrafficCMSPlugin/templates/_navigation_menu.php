@@ -7,13 +7,18 @@
     <ul>
     <?php foreach ($nav_items as $model => $options): ?>
       <?php $singleton = (isset($config['models'][$model]['singleton']) && $config['models'][$model]['singleton']) ? $config['models'][$model]['singleton'] : false ?>
+      <?php
+      if(!isset($options['credential']) && isset($options['credentials'])){
+        $options['credential'] = $options['credentials'];
+      }
+      ?>
       <?php if(!isset($options['credential']) || $sf_user->hasCredential($options['credential'])): ?>
       <?php if(isset($routes[$model])): ?>
       <li>
         <?php echo link_to($options['label'], '@' . $model . ($singleton ? '_edit?id=1' : '')); ?>
       <?php else: ?>
       <li>
-        <a href="#"><?php echo $options['label'];?></a>
+        <a ><?php echo $options['label'];?></a>
         
       <?php endif; ?>
         <?php
