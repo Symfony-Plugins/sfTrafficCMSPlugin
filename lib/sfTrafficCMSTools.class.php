@@ -19,11 +19,21 @@ class sfTrafficCMSTools {
   public static function appendSeoContent(sfEvent $event )
   {
     $response = sfContext::getInstance()->getResponse();
-    $route = sfContext::getInstance()->getRouting()->getCurrentRouteName();
+    $request = sfContext::getInstance()->getRequest();
+    $path_info_array = $request->getPathInfoArray();
+    
+
+
+    $url = isset($path_info_array['PATH_INFO']) ? $path_info_array['PATH_INFO'] : $path_info_array['REQUEST_URI'] ;
     
     
-    $pageSEOContent =  sfTrafficCMSSeoTable::getInstance()->findOneByRoute($route);
-    
+   
+    $pageSEOContent =  sfTrafficCMSSeoTable::getInstance()->findOneByUrl($url);
+    if(!$pageSEOContent instanceof sfTrafficCMSSeo )
+    {
+      $route = sfContext::getInstance()->getRouting()->getCurrentRouteName();
+      $pageSEOContent =  sfTrafficCMSSeoTable::getInstance()->findOneByRoute($route);
+    }
     if($pageSEOContent instanceof sfTrafficCMSSeo)
     {
       $response->setTitle($pageSEOContent->title);
