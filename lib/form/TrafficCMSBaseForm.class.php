@@ -306,6 +306,16 @@ class TrafficCMSBaseForm extends sfFormDoctrine
         unset($this[$updated['name']]);
       }
     }
+
+    if ($table->hasTemplate('Doctrine_Template_SoftDelete'))
+    {
+      $deleted = $table->getTemplate('Doctrine_Template_SoftDelete')->getOption('name');
+
+      if (isset($this[$deleted]))
+      {
+        unset($this[$deleted]);
+      }
+    }
   }
 
   private function embedSortableList($model_name, $options)
