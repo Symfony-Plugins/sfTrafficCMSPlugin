@@ -11,7 +11,10 @@ class sfTrafficGuardSecurityUser extends sfGuardSecurityUser
   {
     if (parent::isAuthenticated() && $user = $this->getGuardUser())
     {
-      return $user->hasAccess();
+      /**
+       * If our user has a method called hasAccess() then return the result of that otherwise true
+       */
+      return method_exists($user, 'hasAccess') ? $user->hasAccess() : true;
     }
 
     return false;
