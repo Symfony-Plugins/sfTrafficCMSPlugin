@@ -22,12 +22,8 @@ class sfTrafficCMSTools {
     $request = sfContext::getInstance()->getRequest();
     $path_info_array = $request->getPathInfoArray();
     
-
-
     $url = isset($path_info_array['PATH_INFO']) ? $path_info_array['PATH_INFO'] : $path_info_array['REQUEST_URI'] ;
     
-    
-   
     $pageSEOContent =  sfTrafficCMSSeoTable::getInstance()->findOneByUrl($url);
     if(!$pageSEOContent instanceof sfTrafficCMSSeo )
     {

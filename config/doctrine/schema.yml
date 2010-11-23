@@ -43,3 +43,56 @@ sfTrafficCMSSeo:
     route:            { type: string(250) }
     meta_keywords:    { type: string(250) }
     meta_description: { type: string(250) }
+
+sfTrafficCMSI18nPage:
+  actAs:
+    Sluggable:
+      fields: [ title ]
+    I18n:
+      fields: [ title, body_copy, meta_keywords, meta_description ]
+    TrafficCMS: ~
+    Timestampable: ~
+  columns:
+    title:            { type: string(250), notnull: true }
+    route:            { type: string(250) }
+    meta_keywords:    { type: string(250) }
+    meta_description: { type: string(250) }
+    body_copy:        { type: string(10000) }
+    has_sub_pages:    { type: boolean, notnull: true, default: false }
+
+sfTrafficCMSI18nSubPage:
+  actAs:
+    Sluggable:
+      fields: [ title ]
+    I18n:
+      fields: [ title, body_copy, meta_keywords, meta_description ]
+    TrafficCMS: ~
+    Timestampable: ~
+  columns:
+    title:            { type: string(250), notnull: true }
+    parent_id:        { type: integer, notnull: false }
+    route:            { type: string(250) }
+    meta_keywords:    { type: string(250) }
+    meta_description: { type: string(250) }
+    body_copy:        { type: string(10000) }
+  relations:
+    Parent:
+      class: sfTrafficCMSPage
+      local: parent_id
+      foreignAlias: SubPages
+
+
+sfTrafficCMSI18nSeo:
+  actAs:
+    Timestampable: ~
+    TrafficCMS: ~
+    I18n:
+      fields: [ page_name, title, url, route, meta_keywords, meta_description ]
+  columns:
+    page_name:        { type: string(250) }
+    title:            { type: string(250) }
+    url:              { type: string(100) }
+    route:            { type: string(250) }
+    meta_keywords:    { type: string(250) }
+    meta_description: { type: string(250) }
+

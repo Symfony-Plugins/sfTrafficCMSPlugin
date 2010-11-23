@@ -25,8 +25,12 @@ class sfTrafficCMSRouting
    */
   static public function simplePageRouting(sfEvent $event)
   {
+    if(sfConfig::get('app_sf_traffic_cms_plugin_use_i18n', false)){
+      self::simplePageI18nRouting($event);
+      return;
+    }
     $r = $event->getSubject();
-
+    
     $r->appendRoute('simple_page',
       new sfDoctrineRoute(
         '/:slug',
@@ -40,6 +44,26 @@ class sfTrafficCMSRouting
         '/:parentslug/:slug',
         array('module' => 'sfTrafficCMSPlugin', 'action' => 'showSubPage') // defaults
     ));
+  }
+
+  static public function simplePageI18nRouting(sfEvent $event)
+  {
+      $r = $event->getSubject();
+      
+      $r->prependRoute('simple_page',
+      new sfDoctrineRoute(
+        '/:sf_culture/page/:slug',
+        array('module' => 'sfTrafficCMSi18nPlugin', 'action' => 'simplePage'), // defaults
+        array(), // requirements
+        array('model' => 'sfTrafficCMSI18nPage', 'type' => 'object')  // options
+      ));
+
+      $r->prependRoute('simple_sub_page',
+        new sfRequestRoute(
+          '/:sf_culture/page/:parentslug/:slug',
+          array('module' => 'sfTrafficCMSi18nPlugin', 'action' => 'showSubPage') // defaults
+      ));
+    
   }
 }
 

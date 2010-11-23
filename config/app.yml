@@ -8,3 +8,4 @@ all:
         width: 550
         height: 350
         config: 'theme: "simple"'
+    use_i18n: false
