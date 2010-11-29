@@ -36,7 +36,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
   }
 
-  private function deleteEmbeddedFormFields(&$taintedValues, &$taintedFiles, $embedded_models)
+  protected function deleteEmbeddedFormFields(&$taintedValues, &$taintedFiles, $embedded_models)
   {
     foreach ($embedded_models as $model_name_to_embed => $options)
     {
@@ -62,7 +62,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     }
   }
 
-  private function removeEmptyEmbeddedFormFields(&$taintedValues, &$taintedFiles, $embedded_models)
+  protected function removeEmptyEmbeddedFormFields(&$taintedValues, &$taintedFiles, $embedded_models)
   {
     
     foreach ($embedded_models as $model_name_to_embed => $options) {
@@ -119,9 +119,10 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     
   }
 
-  private function autoConfigure()
+  protected function autoConfigure()
   {
     $config = sfConfig::get('app_sf_traffic_cms_plugin_auto_configure', array());
+    
     $object = $this->getObject();
 
     if (isset($config['models']['all'])
@@ -130,7 +131,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     {
       return false;
     }
-
+    
     $this->configureBehaviouralWidgets($config);
 
     $this->configureNonBehaviouralWidgets($config);
@@ -163,6 +164,10 @@ class TrafficCMSBaseForm extends sfFormDoctrine
           }
         }
       }
+      if(isset($config['models'][$object->getTable()->getTableName()]['i18n_config']) && $config['models'][$object->getTable()->getTableName()]['i18n_config'] == true)
+      {
+        $this->configureI18nWidgets($config);
+      }
 
       if (isset($model_config['sortable']) && is_array($model_config['sortable']))
       {
@@ -189,7 +194,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     }
   }
 
-  private function configureField($field_name, $config)
+  protected function configureField($field_name, $config)
   {
     /**
      * Get the options set for the default widget if we didn't specify to clear them
@@ -234,12 +239,15 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     }
   }
 
-  private function configureNonBehaviouralWidgets($config)
+  protected function configureNonBehaviouralWidgets($config)
   {
+    
     foreach ($this->getWidgetSchema()->getFields() as $name => $widget)
     {
+      
       if ($widget instanceof sfWidgetFormTextarea)
       {
+        
         sfJSLibManager::addLib('tiny_mce');
 
         $this->setWidget($name, new sfWidgetFormTextareaTinyMCE(array(
@@ -265,9 +273,56 @@ class TrafficCMSBaseForm extends sfFormDoctrine
           'format' => sfConfig::get($config['date_format'], '%day%/%month%/%year%')));
       }
     }
+    
   }
 
-  private function configureBehaviouralWidgets()
+  protected function configureI18nWidgets($config)
+  {
+
+    foreach ($this->getWidgetSchema()->getFields() as $top_name => $top_level_widget)
+    {
+      
+      if ($top_level_widget instanceof sfWidgetFormSchemaDecorator)
+      {
+        foreach($top_level_widget->getFields() as $name => $widget)
+        {
+          
+         
+          if ($widget instanceof sfWidgetFormTextarea)
+          {
+            
+            sfJSLibManager::addLib('tiny_mce');
+
+            $top_level_widget[$name] = new sfWidgetFormTextareaTinyMCE(array(
+              'width' => isset($config['tiny_mce']['width']) ? $config['tiny_mce']['width'] : 550,
+              'height' => isset($config['tiny_mce']['height']) ? $config['tiny_mce']['height'] : 350,
+              'config' => isset($config['tiny_mce']['config']) ? $config['tiny_mce']['config'] : 'theme: "simple"',
+            ));
+          }
+          else if ($widget instanceof sfWidgetFormInputText)
+          {
+            $top_level_widget[$name]->setAttribute('class', 'textinput');
+          }
+          else if ($widget instanceof sfWidgetFormDate)
+          {
+            $top_level_widget[$name] = sfTrafficCMSTools::convertToJQueryUIDatePicker($widget, $config);
+          }
+          else if ($widget instanceof sfWidgetFormDateTime)
+          {
+            $top_level_widget[$name]->setOption('date', array(
+              'years' => array_combine($config['date_picker']['years'], $config['date_picker']['years']),
+              'months' => array_combine(range(1, 12), range(1, 12)),
+              'days' => array_combine(range(1, 31), range(1, 31)),
+              'format' => sfConfig::get($config['date_format'], '%day%/%month%/%year%')));
+          }
+        }
+        
+      }
+    }
+    
+  }
+
+  protected function configureBehaviouralWidgets()
   {
     $object = $this->getObject();
     $table = $object->getTable();
@@ -318,7 +373,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     }
   }
 
-  private function embedSortableList($model_name, $options)
+  protected function embedSortableList($model_name, $options)
   {
     $model_class_name = preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name);
 
@@ -343,7 +398,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     );
   }
 
-  private function embedModel($model_name, $options)
+  protected function embedModel($model_name, $options)
   {
     $options['max_records'] = isset($options['max_records']) ? $options['max_records'] : 1000000;
     

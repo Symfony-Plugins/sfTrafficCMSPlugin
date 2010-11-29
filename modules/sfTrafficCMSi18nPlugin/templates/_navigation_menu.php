@@ -1,10 +1,6 @@
 <?php if ($sf_user->isAuthenticated()): ?>
   <?php $routes = sfContext::getInstance()->getRouting()->getRoutes(); ?>
-  <?php
-
-  $nav_items = isset($nav_items) ? $sf_data->getRaw('nav_items') : sfConfig::get('app_sf_traffic_cms_plugin_navigation');
-  
-  ?>
+  <?php $nav_items = isset($nav_items) ? $sf_data->getRaw('nav_items') : sfConfig::get('app_sf_traffic_cms_plugin_navigation') ?>
 
   <?php $config = sfConfig::get('app_sf_traffic_cms_plugin_auto_configure') ?>
   <div class="cms_menu">
