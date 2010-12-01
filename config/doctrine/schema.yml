@@ -53,7 +53,7 @@ sfTrafficCMSI18nPage:
     TrafficCMS: ~
     Timestampable: ~
   columns:
-    title:            { type: string(250), notnull: true }
+    title:            { type: string(250) }
     route:            { type: string(250) }
     meta_keywords:    { type: string(250) }
     meta_description: { type: string(250) }
