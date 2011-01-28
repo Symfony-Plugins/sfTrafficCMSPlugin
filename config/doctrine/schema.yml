@@ -44,6 +44,8 @@ sfTrafficCMSSeo:
     meta_keywords:    { type: string(250) }
     meta_description: { type: string(250) }
 
+
+
 sfTrafficCMSI18nPage:
   actAs:
     Sluggable:
@@ -85,11 +87,11 @@ sfTrafficCMSI18nSubPage:
 sfTrafficCMSI18nSeo:
   actAs:
     Timestampable: ~
-    TrafficCMS: ~
     I18n:
-      fields: [ page_name, title, url, route, meta_keywords, meta_description ]
+      fields: [ title, meta_keywords, meta_description ]
+    TrafficCMS: ~
   columns:
-    page_name:        { type: string(250) }
+    page_name:        { type: string(50) }
     title:            { type: string(250) }
     url:              { type: string(100) }
     route:            { type: string(250) }

@@ -2,13 +2,20 @@
 
 class TrafficCMSBaseForm extends sfFormDoctrine
 {
+  
+
   public function getModelName()
   {
   }
 
-  public function setup()
+  protected function getConfig()
   {
-    
+    $config = sfConfig::get('app_sf_traffic_cms_plugin_auto_configure');
+    return $config;
+  }
+
+  public function setup()
+  { 
     if ((!isset($this->autoConfigure) || $this->autoConfigure == true)
         && $this->getObject()->getTable()->hasTemplate('Doctrine_Template_TrafficCMS'))
     {
@@ -18,7 +25,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
-    $config = sfConfig::get('app_sf_traffic_cms_plugin_auto_configure');
+    $config = $this->getConfig();
 
     if (isset($config['models'][$this->getObject()->getTable()->getTableName()]))
     {
@@ -30,10 +37,9 @@ class TrafficCMSBaseForm extends sfFormDoctrine
         $this->deleteEmbeddedFormFields($taintedValues, $taintedFiles, $model_config['embed']);
       }
     }
-    
     // call parent bind method
-    parent::bind($taintedValues, $taintedFiles);
 
+    parent::bind($taintedValues, $taintedFiles);
   }
 
   protected function deleteEmbeddedFormFields(&$taintedValues, &$taintedFiles, $embedded_models)
@@ -44,7 +50,6 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       {
         continue;
       }
-
       foreach ($taintedValues['embedded_' . $model_name_to_embed] as $form_name => $values)
       {
         if (isset($values['_delete_embedded']))
@@ -87,7 +92,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       {
         // remove the embedded new form if the name field was not provided
         if (empty($taintedFiles['new_' . $model_name_to_embed][$options['file_field']]['tmp_name'])) {
-
+          
           unset($this->embeddedForms['new_' . $model_name_to_embed]);
 
           // pass the form validations
@@ -106,6 +111,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
         {
           if (empty($taintedValues['new_' . $model_name_to_embed][$field]))
           {
+            
             unset($this->embeddedForms['new_' . $model_name_to_embed]);
 
             // pass the form validations
@@ -121,7 +127,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
   protected function autoConfigure()
   {
-    $config = sfConfig::get('app_sf_traffic_cms_plugin_auto_configure', array());
+    $config = $this->getConfig();
     
     $object = $this->getObject();
 
@@ -319,7 +325,6 @@ class TrafficCMSBaseForm extends sfFormDoctrine
         
       }
     }
-    
   }
 
   protected function configureBehaviouralWidgets()
@@ -375,8 +380,9 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
   protected function embedSortableList($model_name, $options)
   {
+    
     $model_class_name = preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name);
-
+    
     sfJSLibManager::addLib('jquery_ui');
 
     $this->setWidget(
@@ -384,12 +390,13 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       new sfWidgetFormDoctrineJQueryUISortable(array(
         'model'         => $model_class_name,
         'parent_object' => $this->getObject(),
+        'parent_super_class' => isset($options['parent_super_class']) ? $options['parent_super_class'] : false,
         'method'        => array($options['method'], $options['method_arguments']),
         'grid'          => isset($options['grid']) ? $options['grid'] : false,
         'table_method'  => array($options['table_method'], array($this->getObject()))
       ))
     );
-
+    
     $this->getWidgetSchema()->setLabel(
       'sortable_' . $model_name,
       isset($options['form_label'])
@@ -400,6 +407,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
   protected function embedModel($model_name, $options)
   {
+    
     $options['max_records'] = isset($options['max_records']) ? $options['max_records'] : 1000000;
     
     $object = $this->getObject();
@@ -423,7 +431,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     $children->loadRelated();
     
     foreach ($children as $key => $object_to_embed)
-    { 
+    {
       $object_count++;
 
       $widget_name = $model_name . '_' . $object_to_embed->getId();
@@ -469,9 +477,9 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       );
 
     }
-
+    
     $this->embedForm($embedded_form_name, $form_to_embed);
-
+    
     $this->setWidgetSchema(
       $this->getWidgetSchema()->setLabel(
         $embedded_form_name,
@@ -481,7 +489,9 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       )
     );
 
-    if (!$object->isNew() && $object_count < $options['max_records']) {
+    if (!$object->isNew() && $object_count < $options['max_records'])
+    {
+      
       $model_class = preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name);
 
       // create a new embedded field object
@@ -509,6 +519,10 @@ class TrafficCMSBaseForm extends sfFormDoctrine
         )
       );
     }
+//    else{
+//      echo get_class($object);
+//      die;
+//    }
     
   }
 
@@ -523,7 +537,6 @@ class TrafficCMSBaseForm extends sfFormDoctrine
         $finalFields[] = $field;
       }
     }
-
     $this->useFields($finalFields);
   }
 }

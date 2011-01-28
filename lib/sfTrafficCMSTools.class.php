@@ -37,4 +37,25 @@ class sfTrafficCMSTools {
       $response->addHttpMeta('keywords', $pageSEOContent->meta_keywords);
     }
   }
+  public static function appendI18nSeoContent(sfEvent $event )
+  {
+    $response = sfContext::getInstance()->getResponse();
+    $request = sfContext::getInstance()->getRequest();
+    $path_info_array = $request->getPathInfoArray();
+
+    $url = isset($path_info_array['PATH_INFO']) ? $path_info_array['PATH_INFO'] : $path_info_array['REQUEST_URI'] ;
+
+    $pageSEOContent =  sfTrafficCMSI18nSeoTable::getInstance()->findOneByUrl($url);
+    if(!$pageSEOContent instanceof sfTrafficCMSSeo )
+    {
+      $route = sfContext::getInstance()->getRouting()->getCurrentRouteName();
+      $pageSEOContent =  sfTrafficCMSSeoTable::getInstance()->findOneByRoute($route);
+    }
+    if($pageSEOContent instanceof sfTrafficCMSSeo)
+    {
+      $response->setTitle($pageSEOContent->title);
+      $response->addHttpMeta('description', $pageSEOContent->meta_description);
+      $response->addHttpMeta('keywords', $pageSEOContent->meta_keywords);
+    }
+  }
 }
