@@ -22,7 +22,7 @@ class sfTrafficCMSTools {
     $request = sfContext::getInstance()->getRequest();
     $path_info_array = $request->getPathInfoArray();
     
-    $url = isset($path_info_array['PATH_INFO']) ? $path_info_array['PATH_INFO'] : $path_info_array['REQUEST_URI'] ;
+    $url = isset($path_info_array['PATH_INFO']) ? $path_info_array['PATH_INFO'] : '/' ;
     
     $pageSEOContent =  sfTrafficCMSSeoTable::getInstance()->findOneByUrl($url);
     if(!$pageSEOContent instanceof sfTrafficCMSSeo )
@@ -35,6 +35,11 @@ class sfTrafficCMSTools {
       $response->setTitle($pageSEOContent->title);
       $response->addHttpMeta('description', $pageSEOContent->meta_description);
       $response->addHttpMeta('keywords', $pageSEOContent->meta_keywords);
+    }
+    else{
+      $response->setTitle('no seo content found for: '.$url.' '.$route);
+      
+      
     }
   }
   public static function appendI18nSeoContent(sfEvent $event )
