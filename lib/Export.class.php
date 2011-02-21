@@ -114,4 +114,93 @@ class Export {
     echo $csv;
     exit;
   }
+
+  public static function doExportFast(Doctrine_Query $query, $moduleName)
+  {
+    $rows = $query->execute(array(), Doctrine::HYDRATE_ARRAY);
+  
+    /**
+     * Try to load an export config from config/export.yml
+     */
+    $file = sfConfig::get('sf_app_module_dir') . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'export.yml';
+
+    if (file_exists($file))
+    {
+      $config = sfYaml::load($file);
+      $displayFields = $config['fields'];
+    }
+    else
+    {
+      
+    }
+
+    $totals = array();
+//
+//    foreach ($displayFields as $field => $label)
+//    {
+//      $totals[$field] = isset($config['totals']) && array_key_exists($field, $config['totals']) ? 0 : null;
+//    }
+
+    $lines = array();
+
+    foreach ($rows as $row)
+    {
+      $line = array();
+
+      foreach ($displayFields as $field => $label)
+      {
+        $value = $row[$field];
+
+        if (empty($value))
+        {
+          if (isset($config['defaults']) && isset($config['defaults'][$field]))
+          {
+            $value = $config['defaults'][$field];
+          }
+          else
+          {
+            $value = '-';
+          }
+        }
+        else if (isset($config['types'][$field]))
+        {
+          switch ($config['types'][$field])
+          {
+            case 'boolean':
+              $value = $value ? 'Yes' : 'No';
+              break;
+            case 'timestamp':
+              $value = date('h:i d-m-Y', strtotime($value));
+              break;
+            case 'date':
+              $value = date('d-m-Y', strtotime($value));
+              break;
+          }
+        }
+
+        $value = str_replace('"', '""', $value);
+
+        if (isset($totals[$field]) && !is_null($totals[$field]))
+        {
+          $totals[$field] += $value;
+        }
+
+        $line[] = is_numeric($value) ? $value : '"' . $value . '"';
+      }
+
+      $lines[] = implode(',', $line);
+    }
+
+    $lines = array_merge(array('"' . implode('","', $displayFields) . '"'), $lines);
+
+    $lines[] = implode(',', $totals);
+
+    $csv = implode("\n", $lines);
+
+    header("Content-type: application/octet-stream");
+    header("Content-Disposition: attachment; filename=\"$moduleName-" . date("d-m-Y") . ".csv\"");
+
+    echo $csv;
+    exit;
+  }
 }
