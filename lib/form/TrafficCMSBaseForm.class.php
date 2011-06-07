@@ -284,17 +284,18 @@ class TrafficCMSBaseForm extends sfFormDoctrine
 
   protected function configureI18nWidgets($config)
   {
-
+    
+    
     foreach ($this->getWidgetSchema()->getFields() as $top_name => $top_level_widget)
     {
-      
+    
       if ($top_level_widget instanceof sfWidgetFormSchemaDecorator)
       {
         foreach($top_level_widget->getFields() as $name => $widget)
         {
           
-         
-          if ($widget instanceof sfWidgetFormTextarea)
+
+          if (!isset($config['models'][$this->getObject()->getTable()->getTableName()]['i18n_inore_text_fields'][$name]) && $widget instanceof sfWidgetFormTextarea)
           {
             
             sfJSLibManager::addLib('tiny_mce');

@@ -52,6 +52,8 @@ sfTrafficCMSI18nPage:
       fields: [ title ]
     I18n:
       fields: [ title, body_copy, meta_keywords, meta_description ]
+    JCroppable:
+      images: [ image ]
     TrafficCMS: ~
     Timestampable: ~
   columns:
