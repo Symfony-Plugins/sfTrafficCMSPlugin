@@ -1,9 +1,14 @@
 .cms_menu ul li {
   display: inline;
   list-style-type: none;
+  position: relative;
   margin-right: 8px
 }
 
 .cms_menu ul li a {
   text-decoration: none;
 }
+
+.cms_menu ul ul { display:none; background: #333333; left: 0; position: absolute; top: 16px; width: 200px; z-index: 1000; }
+.cms_menu ul ul li { display: block; margin: 0; }
+.cms_menu ul ul li a { display: block; padding: 5px 10px; }
