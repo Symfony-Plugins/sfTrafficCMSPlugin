@@ -2,6 +2,12 @@
 
 class sfTrafficCMSi18nPluginActions extends sfActions
 {
+
+  public function preExecute() {
+    sfApplicationConfiguration::getActive()->loadHelpers(array('Url','I18N'));
+    parent::preExecute();
+  }
+
   public function executeHome(sfWebRequest $request)
   {
 
