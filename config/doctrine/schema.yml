@@ -100,3 +100,13 @@ sfTrafficCMSI18nSeo:
     meta_keywords:    { type: string(250) }
     meta_description: { type: string(250) }
 
+sfTrafficCMSContent:
+  actAs:
+    Timestampable: ~
+    SoftDelete: ~
+    TrafficCMS: ~
+  columns:
+    name:             { type: string(255), notnull: true }
+    value:            { type: string(10000) }
+    category:         { type: string(64) }
+    rank:             { type: integer }
