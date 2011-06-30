@@ -41,7 +41,7 @@ class sfTrafficCMSi18nPluginActions extends sfActions
 
   public function executeSimplePage(sfWebRequest $request)
   {
-    
+    sfApplicationConfiguration::getActive()->loadHelpers(array('Url','I18N'));
 //    $this->page = $this->getRoute()->getObject();
     $this->page = sfTrafficCMSI18nPageTable::getInstance()->findOneBySlug($request->getParameter('slug')) ;
     
