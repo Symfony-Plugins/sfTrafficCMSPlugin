@@ -110,3 +110,16 @@ sfTrafficCMSContent:
     value:            { type: string(10000) }
     category:         { type: string(64) }
     rank:             { type: integer }
+
+sfTrafficCMSImage:
+  actAs:
+    TrafficCMS: ~
+    Imageable:
+      images:     [ main ]
+    Timestampable: ~
+    SoftDelete: ~
+  columns:
+    name:             { type: string(255), notnull: false }
+    alt:              { type: string(255), notnull: false }
+    category:         { type: string(64) }
+    rank:             { type: integer }
