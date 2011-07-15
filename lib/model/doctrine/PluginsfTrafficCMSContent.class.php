@@ -29,7 +29,7 @@ abstract class PluginsfTrafficCMSContent extends BasesfTrafficCMSContent
   {
     $value = $this->_get('value');
     
-    if ($this->type == float)
+    if ($this->type == 'float')
     {
       $value = sprintf("%.2f", $value);
     }
