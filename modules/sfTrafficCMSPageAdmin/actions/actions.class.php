@@ -1,7 +1,5 @@
 <?php
 
-//require_once dirname(__FILE__).'/../lib/sfTrafficCMSPageAdminGeneratorConfiguration.class.php';
-//require_once dirname(__FILE__).'/../lib/sfTrafficCMSPageAdminGeneratorHelper.class.php';
 require_once dirname(__FILE__).'/../lib/BasesfTrafficCMSPageAdminActions.class.php';
 
 /**
