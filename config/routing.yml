@@ -1,3 +1,12 @@
 sfTrafficCMSPluginDeleteChildren:
   url:   /sf_traffic_cms_plugin/delete_children/:model/:id/:parent_model/:parent_model_id
   param: { module: sfTrafficCMSPlugin, action: deleteChildren }
+  
+sf_traffic_cms_page:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                sfTrafficCMSPage
+    module:               sfTrafficCMSPageAdmin
+    prefix_path:          /sfTrafficCMSPageAdmin
+    column:               id
+    with_wildcard_routes: true
