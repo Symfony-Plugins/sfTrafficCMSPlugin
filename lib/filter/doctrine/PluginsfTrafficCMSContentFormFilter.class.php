@@ -10,4 +10,15 @@
  */
 abstract class PluginsfTrafficCMSContentFormFilter extends BasesfTrafficCMSContentFormFilter
 {
+  public function setup()
+  {
+    parent::setup();
+    
+    $this->widgetSchema['category'] = new sfWidgetFormDoctrineChoice(array(
+        'model'         => 'sfTrafficCMSContent',
+        'table_method'  => 'getCategories',
+        'method'        => 'getCategory',
+        'add_empty'     => true
+    ));
+  }
 }

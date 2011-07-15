@@ -7,13 +7,23 @@
  */
 class PluginsfTrafficCMSContentTable extends Doctrine_Table
 {
-    /**
-     * Returns an instance of this class.
-     *
-     * @return object PluginsfTrafficCMSContentTable
-     */
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('PluginsfTrafficCMSContent');
-    }
+  /**
+   * Returns an instance of this class.
+   *
+   * @return object PluginsfTrafficCMSContentTable
+   */
+  public static function getInstance()
+  {
+    return Doctrine_Core::getTable('PluginsfTrafficCMSContent');
+  }
+  
+  public function getCategories()
+  {
+    $q = $this->createQuery('c')
+            ->select('c.category AS id, c.category AS category')
+            ->groupBy('c.category')
+            ;
+    
+    return $q->execute();
+  }
 }
