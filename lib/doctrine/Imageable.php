@@ -35,6 +35,11 @@ class Doctrine_Template_Imageable extends Doctrine_Template
     $this->addListener(new Doctrine_Template_Listener_Imageable($this->_options));
   }
   
+  public function getImageableFields()
+  {
+    return $this->_options['images'];
+  }
+  
   /**
    * Todo: Magically detect calls to generate{imagename}ImageFilename() and return
    *       an appropriate filename

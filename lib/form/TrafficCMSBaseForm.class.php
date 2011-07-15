@@ -333,6 +333,23 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     $object = $this->getObject();
     $table = $object->getTable();
 
+    if ($table->hasTemplate('Imageable'))
+    {
+      foreach ($object->getImageableFields() as $field_name)
+      {
+        $this->setWidget($field_name . '_image', new sfWidgetFormInputFileEditable(array(
+            'is_image' => $object->isNew() ? false : true,
+            'with_delete' => false,
+            'file_src' => $object->isNew() ? null : $object->getImageSrc($field_name)
+        )));
+
+        $this->validatorSchema[$field_name . '_image'] = new sfValidatorFile(array(
+            'path' => $object->getImagePath($field_name),
+            'required' => false,
+        ));
+      }
+    }
+    
     if ($table->hasTemplate('Doctrine_Template_JCroppable'))
     {
       sfJSLibManager::addLib('jcrop');
