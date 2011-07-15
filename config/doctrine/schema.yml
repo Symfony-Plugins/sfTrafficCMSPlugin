@@ -109,6 +109,7 @@ sfTrafficCMSContent:
     name:             { type: string(255), notnull: true }
     value:            { type: string(10000) }
     category:         { type: string(64) }
+    type:             { type: enum, values: [ text, textarea, richtext, integer, float ], default: text }
     rank:             { type: integer }
 
 sfTrafficCMSImage:

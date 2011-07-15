@@ -1,0 +1,25 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           sfTrafficCMSContent
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          sf_traffic_cms_content
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:  ~
+      list:
+        title:      General Content
+        display:    [ Category, name, _value_snippet, updated_at ]
+      filter:
+        display:    [ category, name, value, updated_at ]
+      form:    ~
+      edit:
+        title:      Editing %%name%%
+      new:     ~

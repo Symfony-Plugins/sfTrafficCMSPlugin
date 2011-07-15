@@ -10,3 +10,12 @@ sf_traffic_cms_page:
     prefix_path:          /sfTrafficCMSPageAdmin
     column:               id
     with_wildcard_routes: true
+
+sf_traffic_cms_content:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                sfTrafficCMSContent
+    module:               sfTrafficCMSContentAdmin
+    prefix_path:          /sfTrafficCMSContentAdmin
+    column:               id
+    with_wildcard_routes: true

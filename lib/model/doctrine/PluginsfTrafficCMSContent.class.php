@@ -12,4 +12,28 @@
  */
 abstract class PluginsfTrafficCMSContent extends BasesfTrafficCMSContent
 {
+  
+  public function getValueSnippet($length = 500)
+  {
+    $str = $this->value;
+    
+    if (strlen($str) > $length)
+    {
+      $str = substr($str, 0, $length) . '...';
+    }
+    
+    return $str;
+  }
+  
+  public function getValue()
+  {
+    $value = $this->_get('value');
+    
+    if ($this->type == float)
+    {
+      $value = sprintf("%.2f", $value);
+    }
+    
+    return $value;
+  }
 }
