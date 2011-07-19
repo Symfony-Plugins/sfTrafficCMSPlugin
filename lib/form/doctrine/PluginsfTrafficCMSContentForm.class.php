@@ -22,7 +22,7 @@ abstract class PluginsfTrafficCMSContentForm extends BasesfTrafficCMSContentForm
       }
       else if ($object->type == 'textarea')
       {
-        $this->widgetSchema['value'] = new sfWidgetFormTextarea();
+        $this->widgetSchema['value'] = new sfWidgetFormTextarea(array(), array('rows' => '10', 'cols' => '60'));
       }
       
       if ($object->type == 'integer')
