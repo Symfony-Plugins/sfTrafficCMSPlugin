@@ -338,9 +338,9 @@ class TrafficCMSBaseForm extends sfFormDoctrine
       foreach ($object->getImageableFields() as $field_name)
       {
         $this->setWidget($field_name . '_image', new sfWidgetFormInputFileEditable(array(
-            'is_image' => $object->isNew() ? false : true,
-            'with_delete' => $object->isNew() ? false : true,
-            'file_src' => $object->isNew() && $object->hasImageSrc($field_name) ? null : $object->getImageSrc($field_name)
+            'is_image' => !$object->isNew() && $object->hasImageSrc($field_name) ? true : false,
+            'with_delete' => !$object->isNew() && $object->hasImageSrc($field_name) ? true : false,
+            'file_src' => !$object->isNew() && $object->hasImageSrc($field_name) ? $object->getImageSrc($field_name) : null
         )));
 
         $this->validatorSchema[$field_name . '_image'] = new sfValidatorFile(array(

@@ -70,7 +70,7 @@ class Doctrine_Template_Imageable extends Doctrine_Template
 
   public function hasImageSrc($field)
   {
-    return $this->getInvoker()->{$field . '_image'} ? true : false;
+    return $this->getInvoker()->{$field . '_image'} != '' ? true : false;
   }
 
   public function getImagePath()
