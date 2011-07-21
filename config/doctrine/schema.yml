@@ -111,6 +111,8 @@ sfTrafficCMSContent:
     category:         { type: string(64) }
     type:             { type: enum, values: [ text, textarea, richtext, integer, float ], default: text }
     rank:             { type: integer }
+  options:
+    orderBy:  rank, category, name
 
 sfTrafficCMSImage:
   actAs:
