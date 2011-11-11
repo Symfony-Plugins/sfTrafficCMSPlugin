@@ -30,6 +30,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     if (isset($config['models'][$this->getObject()->getTable()->getTableName()]))
     {
       $model_config = $config['models'][$this->getObject()->getTable()->getTableName()];
+      
 
       if (isset($model_config['embed']))
       {
@@ -129,6 +130,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
   {
     $config = $this->getConfig();
     
+    
     $object = $this->getObject();
 
     if (isset($config['models']['all'])
@@ -145,6 +147,7 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     if (isset($config['models'][$object->getTable()->getTableName()]))
     {
       $model_config = $config['models'][$object->getTable()->getTableName()];
+    
 
       if (isset($model_config['embed']) && is_array($model_config['embed']))
       {
@@ -163,11 +166,13 @@ class TrafficCMSBaseForm extends sfFormDoctrine
               }
             }
           }
-
+          
           if (!$skip)
           {
+            
             $this->embedModel($model_name, $options);
           }
+          
         }
       }
       if(isset($config['models'][$object->getTable()->getTableName()]['i18n_config']) && $config['models'][$object->getTable()->getTableName()]['i18n_config'] == true)
@@ -435,13 +440,16 @@ class TrafficCMSBaseForm extends sfFormDoctrine
     $form_to_embed = new sfForm(null, array('id' => 'Embedded' . $model_name));
 
     $local = isset($options['local']) ? $options['local'] : $object->getTable()->getTableName() . '_id';
+    
     //$widgets = array();
     $object_count = 0;
 
     $model_class = isset($options['foreignAlias'])
       ? $options['foreignAlias']
       : preg_replace('/(?:^|_)(.?)/e',"strtoupper('$1')", $model_name);
+    
 //die($model_class . 's');
+    
     $children = isset($options['table_method'])
       ? $object->getTable()->{$options['table_method']}($object)
       : $object->get($model_class . 's');

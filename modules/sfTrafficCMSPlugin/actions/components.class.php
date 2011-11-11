@@ -4,6 +4,7 @@ class sfTrafficCMSPluginComponents extends sfComponents
 {
   public function executeNavigationBackend(sfWebRequest $request)
   {
+    
     $config = sfConfig::get('app_sf_traffic_cms_plugin_navigation');
 
     //$this->models = sfTrafficCMSHelper::getDisplayModels();
